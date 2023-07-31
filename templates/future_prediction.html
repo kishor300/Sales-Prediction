@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+      }
+      label,button {
+        font-weight:bold;
+      }
+
+      label,select,input,button {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 18px;
+        padding : 3px;
+      }
+
+      button {
+        width: 150px;
+        display: inline-block;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #ee9a3a;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+
+      body{
+       margin-top: 0;  /* to connect title to top of web page */
+      }
+      .heading-label {
+        margin: 0;  /* to connect title to top of web page */
+        text-align: center;
+        background-color:lightblue ;
+        font-family:'Lucida Sans';
+        font-size: 50px;
+        font-weight: bold;
+        color: #333;
+        text-transform: uppercase;
+        padding: 10px;
+        margin-bottom: 20px;
+      }
+
+      /* css for image frame START -->*/
+      .image-frame {
+        border: 2px solid #ccc;
+        width: 1200px; /* Increased width for better image display */
+        height: 500px; /* Increased height for better image display */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .image-frame img {
+        display: block;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+      /* css for image frame END <-- */
+
+      #myTable {
+        border:2px solid black;
+        border-style:groove;
+        border-collapse:collapse ;
+        width: 30%;
+        height: 50px;
+        font-size: 21px;
+        margin: 0 auto;
+      }
+
+      #myTable tr,td{
+        border:2px solid black ;
+        border-style:groove;
+        word-wrap: break-word;
+      }
+      #myTable td{    
+        word-wrap: break-word;
+      }
+
+      #myTable th,
+      #myTable td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      #myTable th {
+        border:2px solid black;
+        border-style:groove;
+        background-color: #f2f2f2;
+      }
+
+      #myTable tbody tr:nth-child(even) tr:nth-child(odd) {
+        background-color: #f2f2f2;
+      }
+
+      #myTable tbody tr:hover {
+        background-color: #ddd;
+      }
+
+      .wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
+    </style>
+    <title>Sales Prediction</title>
+  </head>
+  <body>
+
+    <h1 class="heading-label">Sales Prediction</h1>
+  
+    <div class="container">  
+        <!-- HTML & Script for Dropdown List & Image Frame START 1 -->
+    
+        <!-- Dropdown list for image selection -->
+        <label for="image-select">Visualize Predicted Sales By: </label>
+        <select id="image-select" onchange="displaySelectedImage(this.value)">
+            <option value="{{ url_for('static', filename='Predicted_Sales.png') }}">Predicted_Sales</option>
+            <option value="{{ url_for('static', filename='Category_wise_Sales_Prediction.png') }}">Category_wise_Sales_Prediction</option>
+            <option value="{{ url_for('static', filename='Category_wise_Profit_Prediction.png') }}">Category_wise_Profit_Prediction</option>
+            <option value="{{ url_for('static', filename='Category_wise_Quantity_Prediction.png') }}">Category_wise_Quantity_Prediction</option>
+            <option value="{{ url_for('static', filename='Market_wise_Sales_Prediction.png') }}">Market_wise_Sales_Prediction</option>
+            <option value="{{ url_for('static', filename='Market_wise_Profit_Prediction.png') }}">Market_wise_Profit_Prediction</option>
+            <option value="{{ url_for('static', filename='Preferable_Ship_Mode_Prediction.png') }}">Preferable_Ship_Mode_Prediction</option>
+            <!-- Add more options as needed -->
+        </select>
+        <br/>
+        <!-- Image frame to display selected image -->
+        <div class="image-frame">
+            <img id="selected-image" src="" alt="Selected Image">
+        </div>
+        <br/>
+
+        <script>
+            function displaySelectedImage(selectedValue) {
+            const selectedImage = document.getElementById('selected-image');
+            selectedImage.src = selectedValue;
+            }
+        
+            // Display image for default selected option on page load
+            window.addEventListener('DOMContentLoaded', function() {
+            const defaultSelectedOption = document.getElementById('image-select').value;
+            displaySelectedImage(defaultSelectedOption);
+            });
+        </script>
+
+        <!-- HTML & Script for Dropdown List & Image Frame END 1 -->
+
+    <button type="submit" onclick="returnHome()">Return</button>
+    <!--<img
+      src="{{ url_for('static', filename='Historical_Sales.png') }}"
+      alt="Example Image"
+      height="300rem"
+      weight="300rem"
+    />-->
+    </div>
+    <table id="myTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Predicted Sales</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i,j in context.items()%}
+        <tr>
+          <td>{{i}}</td>
+          <td>$ {{j}}</td>
+        </tr>
+        {%endfor%}
+      </tbody>
+              
+    </table>
+
+    <script>
+      function returnHome() {
+        window.location.href = "/";
+      }
+    </script>
+    <!--<script>
+      function updateTable(data) {
+        //updateTable(data.predicted_sales);
+        // Select the table element
+        const table = document.querySelector("#myTable");
+        console.log(data.dates);
+        // Example Date and NDTI values
+        const dateValues = data.dates;
+        const predicted_sales = data.values;
+        // console.log("datevalue", dateValues);
+        // console.log("predicted_sales", predicted_sales);
+
+        // Clear any existing rows in the table body
+        table.querySelector("tbody").innerHTML = "";
+
+        // Loop through the Date and NDTI values and add a new row to the table for each value
+        for (let i = 0; i < dateValues.length; i++) {
+          // Create a new row element
+          const row = document.createElement("tr");
+
+          // Create a new cell for the Date value
+          const dateCell = document.createElement("td");
+          dateCell.textContent = dateValues[i];
+
+          // Create a new cell for the NDTI value
+          const predicted = document.createElement("td");
+          predicted.textContent = predicted_sales[i];
+
+          // Append the Date and NDTI cells to the new row
+          row.appendChild(dateCell);
+          row.appendChild(predicted);
+
+          // Append the new row to the table
+          table.querySelector("tbody").appendChild(row);
+        }
+      }
+    </script> -->
+
+  </body>
+</html>

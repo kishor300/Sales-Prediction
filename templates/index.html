@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Sales Prediction</title>
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    label,button {
+      font-weight:bold;
+    }
+
+    label,select,input,button {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-size: 18px;
+      padding : 3px;
+    }
+
+    button {
+      width: 150px;
+      display: inline-block;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      background-color: #ee9a3a;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    body{
+      margin-top: 0;  /* to connect title to top of web page */
+    }
+   
+    .heading-label {
+      margin: 0;
+      text-align: center;
+      background-color:lightblue ;
+      font-family:'Lucida Sans';
+      font-size: 50px;
+      font-weight: bold;
+      color: #333;
+      text-transform: uppercase;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    /* css for image frame START -->*/
+    .image-frame {
+      border: 2px solid #ccc;
+      width: 1200px; /* Increased width for better image display */
+      height: 500px; /* Increased height for better image display */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-frame img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    /* css for image frame END <-- */
+
+    #myTable {
+      border-collapse: collapse;
+      width: 80%;
+      height: 50px;
+      font-size: 21px;
+      margin: 0 auto;
+    }
+
+    #myTable th,
+    #myTable td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #myTable th {
+      background-color: #f2f2f2;
+    }
+
+    #myTable tbody tr:nth-child(even) tr:nth-child(odd) {
+      background-color: #f2f2f2;
+    }
+
+    #myTable tbody tr:hover {
+      background-color: #ddd;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <h1 class="heading-label">Sales Prediction</h1>
+  <br/>
+  <div class="container">
+              
+          <!-- HTML & Script for Dropdown List & Image Frame START 1 -->
+      
+          <label for="image-select">Visualize Historical Sales By: </label>
+          <select id="image-select" onchange="displaySelectedImage(this.value)">
+              <option value="{{ url_for('static', filename='Historical_Sales.png') }}">Historical_Sales</option>
+              <option value="{{ url_for('static', filename='Market_wise_Sales.png') }}">Market_wise_Sales</option>
+              <option value="{{ url_for('static', filename='Preferable_Ship_mode.png') }}">Preferable_Ship_mode</option>
+              <option value="{{ url_for('static', filename='Products_wise_Quantity.png') }}">Products_wise_Quantity</option>
+              <option value="{{ url_for('static', filename='Products_wise_Sales.png') }}">Products_wise_Sales</option>
+              <option value="{{ url_for('static', filename='Category_wise_Profit.png') }}">Category_wise_Profit</option>
+              <option value="{{ url_for('static', filename='Sub_Category_wise_Profit.png') }}">Sub_Category_wise_Profit</option>
+              <option value="{{ url_for('static', filename='Category_wise_Sales.png') }}">Category_wise_Sales</option>
+              <option value="{{ url_for('static', filename='Sub_Category_wise_Sales.png') }}">Sub_Category_wise_Sales</option>
+              
+          </select>
+          <br/>
+          <!-- Image frame to display selected image -->
+          <div class="image-frame">
+              <img id="selected-image" src="" alt="Selected Image">
+          </div>
+          <br/>
+
+          <script>
+              function displaySelectedImage(selectedValue) {
+              const selectedImage = document.getElementById('selected-image');
+              selectedImage.src = selectedValue;
+              }
+          
+              // Display image for default selected option on page load
+              window.addEventListener('DOMContentLoaded', function() {
+              const defaultSelectedOption = document.getElementById('image-select').value;
+              displaySelectedImage(defaultSelectedOption);
+              });
+          </script>
+
+          <!-- HTML & Script for Dropdown List & Image Frame END 1 -->
+
+      <!-- <div class="wrapper"> -->
+        <table>
+          <form id="my-form" action="{{ url_for('predict_sales') }}" method="POST">
+            <tr>
+              <td> <label for="start_date">Start Date:</label> </td>
+              <td> <input type="date" id="start_date" name="start_date" /> </td>
+            </tr>
+            <tr>
+              <td> <label for="end_date">End Date:</label> </td>
+              <td> <input type="date" id="end_date" name="end_date" disabled /> </td>
+            </tr>
+            <tr>
+              <td colspan="2"> <button type="submit">Predict</button> </td>
+            </tr>
+          </form>
+        </table>
+      <!-- </div> -->
+    <!---
+      <div id="imageContainer"></div>
+  <iframe
+        src="index2.html"
+        frameborder="0"
+        width="100%"
+        height="400"
+      ></iframe> 
+      <img
+        src="{{ url_for('static', filename='Predicted_Sales.png') }}"
+        alt="Predicted_Sales graph will be dislayed on prediction is done"
+        height="300rem"
+        weight="300rem"
+      />
+
+      <table id="myTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Predicted Sales</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr></tr>
+        </tbody>
+                
+      </table>
+  -->
+    <script>
+      var startDateInput = document.getElementById("start_date");
+      var endDateInput = document.getElementById("end_date");
+
+      var today = new Date().toISOString().split("T")[0];
+      startDateInput.setAttribute("min", today);
+
+      startDateInput.addEventListener("change", function () {
+        var selectedStartDate = new Date(startDateInput.value);
+        var minimumEndDate = new Date(
+          selectedStartDate.getFullYear(),
+          selectedStartDate.getMonth() + 1,
+          selectedStartDate.getDate()
+        );
+        var today = new Date();
+
+        if (minimumEndDate.getTime() > today.getTime()) {
+          endDateInput.min = minimumEndDate.toISOString().split("T")[0];
+          endDateInput.removeAttribute("disabled");
+        } else {
+          endDateInput.setAttribute("disabled", "disabled");
+        }
+      });
+    </script>
+
+    <script>
+      // call the submitForm function when the form is submitted
+      /*
+    $('#my-form').submit(function(event) {
+        alert("Submit")
+        btn.checked = false;
+    });
+    */
+      // Get the form element
+      const form = document.getElementById("my-form");
+
+      // Add an event listener to the form's submit event
+      form.addEventListener("submit", (event) => {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Get the values of the form fields
+        const dateFrom = document.querySelector('[name="start_date"]').value;
+        const dateTo = document.querySelector('[name="end_date"]').value;
+
+        console.log(dateFrom, dateTo);
+
+        if (!dateFrom) {
+          alert("Select From Date");
+          return;
+        }
+        if (!dateTo) {
+          alert("Select To Date");
+          return;
+        }
+
+        // Check if all required fields are filled
+
+        // If all required fields are filled, submit the form
+        form.submit();
+      });
+    </script>
+  </div>
+
+</body>
+
+</html>
