@@ -13,6 +13,7 @@ python-dateutil>=2.8.2
 
 # Machine learning
 scikit-learn>=0.24.2
+statsmodels>=0.13.1
 
 # Flask and its dependencies
 Flask>=2.0.1
