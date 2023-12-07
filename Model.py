@@ -11,6 +11,7 @@ import calendar
 
 from sklearn.preprocessing import LabelEncoder
 LE = LabelEncoder()
+
 ##############################################################################
 
 with open('Model_Monthly_Sales.pkl', 'rb') as f:
@@ -506,7 +507,6 @@ def SHIP_MODE(start_date, end_date):
     Plot_Bar(col_exog,col_year,col_pred,X_Label,Y_Label,Title)   # calling Plot_Bar function
 
 
-
 def Prediction(start_date, end_date):
 
     print('\n***********************\n Start Date:', start_date,
@@ -529,11 +529,11 @@ def Prediction(start_date, end_date):
     delta1 = relativedelta.relativedelta( datetime.strptime('2022-12-31', '%Y-%m-%d'),
                                           start_date)    #-1 # (last_date_of_dataset , user_entered_date)
     first_month_date = abs(delta1.months + (delta1.years * 12))     # calculate 'no._of_days' from last_date_of_dataset to user_entered_date
-    # print('$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+    # print('--------------------------------------')
     # print(abs(first_month_date))
     # print(months)
 
-    ######################################################################
+    ######################################################################################
 
 
     SHIP_MODE(start_date, end_date)
@@ -556,11 +556,11 @@ def Prediction(start_date, end_date):
     # print(dic)
     Plot_Line(dic)
 
-    # ?
     data = { "dates": [i for i in dic.keys()],
             "values": [j for j in dic.values()] }
-
+    
     return dic
 
-# start_date, end_date = ('2023-01-01', '2024-12-01')     # just for reference these dates will not consider during flask execution
+# #Trial start_date & end_date for executing Model.py
+# start_date, end_date = ('2023-01-01', '2024-12-01')     
 # Prediction(start_date, end_date)
